@@ -24,10 +24,14 @@ void setup() {
     delay(500);
   }
 
-  ping();
+  declareSensor();
 }
 
+unsigned long previousMillis = 0;
+unsigned long interval = 10 * 1000;
 void loop() {
+  unsigned long currentMills = millis();
+
   bool on = digitalRead(D5) == HIGH;
   if (state != on) {
     digitalWrite(LED_BUILTIN, on ? LOW : HIGH);
@@ -37,5 +41,8 @@ void loop() {
     signalServer(on);
   }
 
-  delay(50);
+  if (currentMills - previousMillis >= interval) {
+    previousMillis = currentMills;
+    declareSensor();
+  }
 }
