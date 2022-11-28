@@ -13,9 +13,11 @@ WiFiClient wifiClient;
 
 const char *ssid = "";
 const char *password = "";
+
+// IP address where the home-hub-free server is running
 String home_server = "";
 // This id should be unique across devices
-const uint32 id = system_get_chip_id();
+const uint32 chipId = system_get_chip_id();
 
 
 void wifiConnect() {
@@ -35,9 +37,9 @@ void wifiConnect() {
 void signalServer(int value) {
   Serial.print("Signaling server of:");
   Serial.println(value);
-  http.begin(wifiClient, home_server + "/sensor-signal");
+  http.begin(wifiClient, home_server + "/sensor-update");
   http.addHeader("Content-Type", "application/json");
-  int httpCode = http.POST("{\"value\": " + String(value) + ", \"id\": " + String(id) + "}");
+  int httpCode = http.POST("{\"value\": " + String(value) + ", \"id\": " + String(chipId) + "}");
   if (httpCode > 0) {
     String result = http.getString();
     Serial.print("Result: ");
@@ -51,9 +53,12 @@ void signalServer(int value) {
 }
 
 void ping() {
-  http.begin(wifiClient, home_server + "/ping");
+  http.begin(wifiClient, home_server + "/sensor-declare");
   http.addHeader("Content-Type", "application/json");
-  int httpCode = http.POST("{ \"sensor\": \"" + String(id) + "\"}");
+  String id = String(chipId);
+  String jsonString = "{ \"id\": \"" + id + "\", \"name\": \"sensor\" }";
+  int httpCode = http.POST(jsonString);
+
   if (httpCode > 0) {
     String result = http.getString();
     Serial.print("Result: ");

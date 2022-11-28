@@ -3,14 +3,15 @@
 
 int calibrationTime = 30; //the time when the sensor outputs a low impulse long unsigned 
 bool state = false;
+uint8_t PIR_PIN = D5;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  pinMode(D5, INPUT);
+  pinMode(PIR_PIN, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
 
-  digitalWrite(D5, LOW);
+  digitalWrite(PIR_PIN, LOW);
   digitalWrite(LED_BUILTIN, LOW);
 
   wifiConnect();
@@ -28,7 +29,7 @@ void setup() {
 }
 
 void loop() {
-  bool on = digitalRead(D5) == HIGH;
+  bool on = digitalRead(PIR_PIN) == HIGH;
   if (state != on) {
     digitalWrite(LED_BUILTIN, on ? LOW : HIGH);
     state = on;
