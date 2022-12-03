@@ -28,7 +28,11 @@ void setup() {
   ping();
 }
 
+unsigned long previousMillis = 0;
+unsigned long interval = 10 * 1000;
 void loop() {
+  unsigned long currentMills = millis();
+
   bool on = digitalRead(PIR_PIN) == HIGH;
   if (state != on) {
     digitalWrite(LED_BUILTIN, on ? LOW : HIGH);
@@ -37,6 +41,9 @@ void loop() {
     Serial.println(on);
     signalServer(on);
   }
-
   delay(50);
+  if (currentMills - previousMillis >= interval) {
+    previousMillis = currentMills;
+    ping();
+  }
 }

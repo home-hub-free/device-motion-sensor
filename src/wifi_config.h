@@ -11,6 +11,7 @@
 HTTPClient http;
 WiFiClient wifiClient;
 
+// Replace this with out own info:
 const char *ssid = "";
 const char *password = "";
 
@@ -56,7 +57,7 @@ void ping() {
   http.begin(wifiClient, home_server + "/sensor-declare");
   http.addHeader("Content-Type", "application/json");
   String id = String(chipId);
-  String jsonString = "{ \"id\": \"" + id + "\", \"name\": \"sensor\" }";
+  String jsonString = "{ \"id\": \"" + id + "\", \"name\": \"motion\" }";
   int httpCode = http.POST(jsonString);
 
   if (httpCode > 0) {
