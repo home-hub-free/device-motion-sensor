@@ -5,34 +5,25 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
+#include <WiFiManager.h>
 #elif defined(ESP32)
 #endif
 
 HTTPClient http;
 WiFiClient wifiClient;
-
-// Replace this with out own info:
-const char *ssid = "";
-const char *password = "";
+WiFiManager wifiManager;
 
 // IP address where the home-hub-free server is running
-String home_server = "";
+String home_server = "http://192.168.1.199:8080";
 // This id should be unique across devices
 const uint32 chipId = system_get_chip_id();
 
 
 void wifiConnect() {
-	WiFi.persistent(false);
-	WiFi.mode(WIFI_STA);
-	WiFi.setAutoReconnect(true);
-	WiFi.begin(ssid, password);
-	Serial.println("WiFi connecting...");
-	while (!WiFi.isConnected()) {
-		delay(100);
-		Serial.print(".");
-	}
-	Serial.print("\n");
-	Serial.printf("WiFi connected, IP: %s\n", WiFi.localIP().toString().c_str());
+  // Attemp to auto-connect for 10 seconds
+  wifiManager.setConnectTimeout(10);
+  wifiManager.setConfigPortalTimeout(300);
+  wifiManager.autoConnect("HHF - Motion Sensor");
 }
 
 void signalServer(int value) {
