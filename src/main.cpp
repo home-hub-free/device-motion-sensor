@@ -25,7 +25,7 @@ void setup() {
     delay(500);
   }
 
-  ping();
+  declareSensor();
 }
 
 unsigned long previousMillis = 0;
@@ -41,9 +41,9 @@ void loop() {
     Serial.println(on);
     signalServer(on);
   }
-  delay(50);
+
   if (currentMills - previousMillis >= interval) {
     previousMillis = currentMills;
-    ping();
+    declareSensor();
   }
 }
